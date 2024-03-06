@@ -25,5 +25,5 @@ jobs:
       run: |
         export GOPATH=`go env GOPATH` &&
         export PATH="$GOPATH/bin:$PATH" &&
-        GOCACHE=off go install github.com/relaxnow/vcgopkg@latest
+        GOPROXY=direct go install github.com/relaxnow/vcgopkg@latest
         vcgopkg
