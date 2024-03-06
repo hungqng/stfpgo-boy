@@ -1,0 +1,29 @@
+name: VCGOPKG
+
+on: workflow_dispatch
+
+jobs:
+  vcgopkg:
+    name: Package with vcgopkg
+    runs-on: ubuntu-latest
+    steps:
+    - name: Check out main branch
+      uses: actions/checkout@v2
+     
+    - name: Set up Go
+      uses: actions/setup-go@v2
+      with:
+        go-version: 1.22
+        
+    - name: Create Vendor Folder
+      run: go mod vendor
+      
+    - name: Build
+      run: go build -v ./...
+     
+    - name: Package the application for Veracode Static Analysis
+      run: |
+        export GOPATH=`go env GOPATH` &&
+        export PATH="$GOPATH/bin:$PATH" &&
+        go install github.com/relaxnow/vcgopkg@latest
+        vcgopkg
