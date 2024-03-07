@@ -1,0 +1,47 @@
+name: Veracode Static Analysis
+on: workflow_dispatch
+    
+jobs:
+  static_scan:
+    name: Static Analysis Scan
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Check out main branch
+        uses: actions/checkout@v2
+        
+      - name: Set up Go
+        uses: actions/setup-go@v2
+        with:
+          go-version: 1.22
+      - name: Create Vendor Folder
+        run: go mod vendor
+      - name: Build
+        run: go build -v ./...
+        
+      - name: Package the application for Veracode Static Analysis
+        run: |
+          export GOPATH=`go env GOPATH` &&
+          export PATH="$GOPATH/bin:$PATH" &&
+          go install github.com/relaxnow/vcgopkg@latest
+          vcgopkg
+
+      - name: Veracode Upload And Scan
+        uses: veracode/veracode-uploadandscan-action@0.2.6
+        with:
+          # Veracode application profile name
+          appname: 'SFTPGo'
+          createprofile: false
+          # Veracode application sandbox name
+          # sandboxname: 'GitHub'
+          # createsandbox: false
+          # Build artifact directory
+          filepath: veracode/*.zip
+          # Scan name
+          version: ${{ github.run_id }}-${{ github.run_number }}-${{ github.run_attempt }}
+          # API credentials
+          vid: '${{ secrets.VERACODE_API_ID }}'
+          vkey: '${{ secrets.VERACODE_API_KEY }}'
+          # scantimeout: 60
+          # Optional arguments
+          deleteincompletescan: 2
