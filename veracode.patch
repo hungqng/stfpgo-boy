@@ -1,0 +1,14 @@
+diff --git a/internal/dataprovider/sqlite_disabled.go b/internal/dataprovider/sqlite_disabled.go
+index 6c7ea18d..34d5a83e 100644
+--- a/internal/dataprovider/sqlite_disabled.go
++++ b/internal/dataprovider/sqlite_disabled.go
+@@ -12,9 +12,6 @@
+ // You should have received a copy of the GNU Affero General Public License
+ // along with this program. If not, see <https://www.gnu.org/licenses/>.
+ 
+-//go:build nosqlite
+-// +build nosqlite
+-
+ package dataprovider
+ 
+ import (
